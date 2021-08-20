@@ -61,6 +61,27 @@ jobs:
           path: safteyoutput.json
         if: always()
 
+  oast-npmscan:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Clone the Repository
+        uses: actions/checkout@v2
+
+      - name: Install Node Modules
+        run: npm install
+
+      - name: run npm Audit
+        run: npm audit --json | tee npmaudit-output.json
+        continue-on-error: true
+      
+      - name: Upload the Safety Output file
+        uses: actions/upload-artifact@v2
+        with:
+          name: NPMAudit-Output-file
+          path: npmaudit-output.json
+        if: always()
+
   deployment:
     runs-on: ubuntu-latest
     needs: oast-saftey
