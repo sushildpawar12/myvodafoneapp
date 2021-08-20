@@ -41,7 +41,7 @@ jobs:
   
   oast-saftey:
     runs-on: ubuntu-latest
-    needs: oast-retire
+    needs: test
     steps:
       - name: Clone the Repository
         uses: actions/checkout@v2
