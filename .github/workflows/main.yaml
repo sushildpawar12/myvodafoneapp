@@ -31,10 +31,28 @@ jobs:
         run: | 
           retire --outputformat json --outputpath retire_output.json
         continue-on-error: true
+  
+  oast-saftey:
+    runs-on: ubuntu-latest
+    needs: oast-retire
+    steps:
+      - name: Clone the Repository
+        uses: actions/checkout@v2
+
+      - name: Install Saftey
+        run: pip install safety
+
+      - name: Install Node Modules
+        run: npm install
+
+      - name: run Saftey Scan
+        run: | 
+          safety check -r requirements.txt --json -o safteyoutput.json
+        continue-on-error: true
 
   deployment:
     runs-on: ubuntu-latest
-    needs: oast-retire
+    needs: oast-saftey
     steps:
       - run: |
           echo "deployment Job is going on"
